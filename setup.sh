@@ -1,4 +1,15 @@
 #!/bin/sh
+
+# Install necessary tools first
+apt update
+apt install -y net-tools
+apt install -y git
+apt install -y network-manager
+apt install -y hostapd
+systemctl unmask hostapd
+systemctl enable NetworkManager
+systemctl start NetworkManager
+
 # Make sure we have the correct system time. We cheat by getting it from Google.
 date --set="$(curl -I --silent  http://google.com/ | grep Date | cut -f 2- -d" ")"
 
@@ -44,9 +55,10 @@ cp pitm-sysctl.conf /etc/sysctl.d/
 
 # install P4wnP1
 cd
-git clone --depth 1 https://github.com/Mame82/P4wnP1_aloa
+git clone https://github.com/RoganDawes/P4wnP1_aloa
 cd P4wnP1_aloa/
-mkdir -p /usr/local//P4wnP1
+git reset --hard 95de406
+mkdir -p /usr/local/P4wnP1
 cp build/P4wnP1_* /usr/local/bin/
 cp -r dist/* /usr/local/P4wnP1/
 mv /usr/local/P4wnP1/P4wnP1.service /etc/systemd/system
